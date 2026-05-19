@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthModule } from './auth/auth.module';
 import { InvitesModule } from './invites/invites.module';
+import { FilesModule } from './files/files.module';
 import { OrganizationsModule } from './organizations/organizations.module';
 import { UsersModule } from './users/users.module';
 import { AppController } from './app.controller';
@@ -16,6 +17,7 @@ import { FileShare } from './database/entities/file-share.entity';
   imports: [
     AuthModule,
     InvitesModule,
+    FilesModule,
     OrganizationsModule,
     UsersModule,
     TypeOrmModule.forRoot({
