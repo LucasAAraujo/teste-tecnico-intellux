@@ -7,6 +7,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  Patch,
   Post,
   Query,
   UploadedFile,
@@ -17,9 +18,10 @@ import { mkdirSync } from 'fs';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { randomUUID } from 'crypto';
-import { CurrentUser } from '../common/decorators/auth.decorators';
+import { CurrentUser, Roles } from '../common/decorators/auth.decorators';
 import type { JwtPayload } from '../auth/auth.service';
-import { FileFilterDto, ShareFileDto } from './dto/files.dto';
+import { UserRole } from '../database/entities/user.entity';
+import { FileFilterDto, ShareFileDto, UpdateFileDto } from './dto/files.dto';
 import { FilesService } from './files.service';
 import { SharesService } from './shares.service';
 
@@ -47,7 +49,8 @@ export class FilesController {
     private readonly sharesService: SharesService,
   ) {}
 
-  @Post()
+  @Post('upload')
+  @Roles(UserRole.OWNER, UserRole.USER)
   @UseInterceptors(FileInterceptor('file', multerOptions))
   upload(@UploadedFile() file: Express.Multer.File, @CurrentUser() user: JwtPayload) {
     if (!file) throw new BadRequestException('Arquivo obrigatório');
@@ -55,22 +58,32 @@ export class FilesController {
   }
 
   @Get()
+  @Roles(UserRole.OWNER, UserRole.USER)
   findAll(@Query() query: FileFilterDto, @CurrentUser() user: JwtPayload) {
     return this.filesService.findAll(query, user);
   }
 
   @Get(':id')
+  @Roles(UserRole.OWNER, UserRole.USER)
   findOne(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
     return this.filesService.findOne(id, user);
   }
 
+  @Patch(':id')
+  @Roles(UserRole.OWNER, UserRole.USER)
+  update(@Param('id') id: string, @Body() dto: UpdateFileDto, @CurrentUser() user: JwtPayload) {
+    return this.filesService.update(id, dto, user);
+  }
+
   @Delete(':id')
+  @Roles(UserRole.OWNER)
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
     return this.filesService.remove(id, user);
   }
 
   @Post(':id/share')
+  @Roles(UserRole.OWNER, UserRole.USER)
   @HttpCode(HttpStatus.CREATED)
   share(@Param('id') id: string, @Body() dto: ShareFileDto, @CurrentUser() user: JwtPayload) {
     return this.sharesService.share(id, dto, user);

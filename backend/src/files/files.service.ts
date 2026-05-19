@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import type { JwtPayload } from '../auth/auth.service';
 import { FileEntity, FileType } from '../database/entities/file.entity';
 import { UserRole } from '../database/entities/user.entity';
-import { FileFilterDto } from './dto/files.dto';
+import { FileFilterDto, UpdateFileDto } from './dto/files.dto';
 
 @Injectable()
 export class FilesService {
@@ -67,6 +67,18 @@ export class FilesService {
       throw new ForbiddenException();
     }
     return file;
+  }
+
+  async update(id: string, dto: UpdateFileDto, caller: JwtPayload): Promise<FileEntity> {
+    const file = await this.findOne(id, caller);
+
+    if (caller.role === UserRole.USER && file.createdBy !== caller.sub) {
+      throw new ForbiddenException('Você só pode editar arquivos próprios');
+    }
+
+    if (dto.name !== undefined) file.name = dto.name;
+
+    return this.fileRepo.save(file);
   }
 
   async remove(id: string, caller: JwtPayload): Promise<void> {

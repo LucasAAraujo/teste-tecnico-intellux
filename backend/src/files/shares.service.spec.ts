@@ -39,41 +39,41 @@ describe('SharesService', () => {
     userRepo.findOne.mockResolvedValue(makeUser());
     shareRepo.findOne.mockResolvedValue(null);
 
-    await service.share('f1', { recipientId: 'u2' }, caller);
+    await service.share('f1', { recipientIds: ['u2'] }, caller);
     expect(shareRepo.save).toHaveBeenCalled();
   });
 
   it('lança NotFoundException se arquivo não existe', async () => {
     fileRepo.findOne.mockResolvedValue(null);
-    await expect(service.share('x', { recipientId: 'u2' }, caller)).rejects.toThrow(NotFoundException);
+    await expect(service.share('x', { recipientIds: ['u2'] }, caller)).rejects.toThrow(NotFoundException);
   });
 
   it('lança BadRequestException ao compartilhar consigo mesmo', async () => {
     fileRepo.findOne.mockResolvedValue(makeFile());
-    await expect(service.share('f1', { recipientId: 'u1' }, caller)).rejects.toThrow(BadRequestException);
+    await expect(service.share('f1', { recipientIds: ['u1'] }, caller)).rejects.toThrow(BadRequestException);
   });
 
   it('lança NotFoundException se destinatário não existe', async () => {
     fileRepo.findOne.mockResolvedValue(makeFile());
     userRepo.findOne.mockResolvedValue(null);
-    await expect(service.share('f1', { recipientId: 'u99' }, caller)).rejects.toThrow(NotFoundException);
+    await expect(service.share('f1', { recipientIds: ['u99'] }, caller)).rejects.toThrow(NotFoundException);
   });
 
   it('lança BadRequestException para destinatário de outra org', async () => {
     fileRepo.findOne.mockResolvedValue(makeFile());
     userRepo.findOne.mockResolvedValue(makeUser({ organizationId: 'org-2' }));
-    await expect(service.share('f1', { recipientId: 'u2' }, caller)).rejects.toThrow(BadRequestException);
+    await expect(service.share('f1', { recipientIds: ['u2'] }, caller)).rejects.toThrow(BadRequestException);
   });
 
   it('lança ConflictException para compartilhamento duplicado', async () => {
     fileRepo.findOne.mockResolvedValue(makeFile());
     userRepo.findOne.mockResolvedValue(makeUser());
     shareRepo.findOne.mockResolvedValue({ id: 'existing' });
-    await expect(service.share('f1', { recipientId: 'u2' }, caller)).rejects.toThrow(ConflictException);
+    await expect(service.share('f1', { recipientIds: ['u2'] }, caller)).rejects.toThrow(ConflictException);
   });
 
   it('lança ForbiddenException ao compartilhar arquivo de outra org', async () => {
     fileRepo.findOne.mockResolvedValue(makeFile({ organizationId: 'org-2' }));
-    await expect(service.share('f1', { recipientId: 'u2' }, caller)).rejects.toThrow(ForbiddenException);
+    await expect(service.share('f1', { recipientIds: ['u2'] }, caller)).rejects.toThrow(ForbiddenException);
   });
 });

@@ -25,6 +25,16 @@ export class InvitesService {
     private readonly mailService: MailService,
   ) {}
 
+  findAll(caller: JwtPayload): Promise<Invite[]> {
+    if (caller.role === UserRole.SUPER_ADMIN) {
+      return this.inviteRepo.find({ order: { createdAt: 'DESC' } });
+    }
+    return this.inviteRepo.find({
+      where: { organizationId: caller.organizationId ?? undefined },
+      order: { createdAt: 'DESC' },
+    });
+  }
+
   async create(dto: CreateInviteDto, caller: JwtPayload): Promise<void> {
     const role = caller.role === UserRole.SUPER_ADMIN ? InviteRole.OWNER : InviteRole.USER;
     const organizationId = caller.role === UserRole.SUPER_ADMIN ? null : caller.organizationId;

@@ -29,21 +29,27 @@ export class SharesService {
       throw new ForbiddenException();
     }
 
-    if (dto.recipientId === caller.sub) {
-      throw new BadRequestException('Não é possível compartilhar com você mesmo');
+    if (caller.role === UserRole.USER && file.createdBy !== caller.sub) {
+      throw new ForbiddenException('Você só pode compartilhar arquivos próprios');
     }
 
-    const recipient = await this.userRepo.findOne({ where: { id: dto.recipientId } });
-    if (!recipient) throw new NotFoundException('Destinatário não encontrado');
-    if (recipient.organizationId !== file.organizationId) {
-      throw new BadRequestException('O destinatário deve pertencer à mesma organização');
+    for (const recipientId of dto.recipientIds) {
+      if (recipientId === caller.sub) {
+        throw new BadRequestException('Não é possível compartilhar com você mesmo');
+      }
+
+      const recipient = await this.userRepo.findOne({ where: { id: recipientId } });
+      if (!recipient) throw new NotFoundException(`Destinatário ${recipientId} não encontrado`);
+      if (recipient.organizationId !== file.organizationId) {
+        throw new BadRequestException('Todos os destinatários devem pertencer à mesma organização');
+      }
+
+      const existing = await this.shareRepo.findOne({ where: { fileId, recipientId } });
+      if (existing) throw new ConflictException(`Arquivo já compartilhado com o usuário ${recipientId}`);
+
+      await this.shareRepo.save(
+        this.shareRepo.create({ fileId, ownerId: caller.sub, recipientId }),
+      );
     }
-
-    const existing = await this.shareRepo.findOne({ where: { fileId, recipientId: dto.recipientId } });
-    if (existing) throw new ConflictException('Arquivo já compartilhado com este usuário');
-
-    await this.shareRepo.save(
-      this.shareRepo.create({ fileId, ownerId: caller.sub, recipientId: dto.recipientId }),
-    );
   }
 }

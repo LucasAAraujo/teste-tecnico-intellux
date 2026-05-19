@@ -10,6 +10,12 @@ export class InvitesController {
   constructor(private readonly invitesService: InvitesService) {}
 
   @Roles(UserRole.SUPER_ADMIN, UserRole.OWNER)
+  @Get()
+  findAll(@CurrentUser() user: JwtPayload) {
+    return this.invitesService.findAll(user);
+  }
+
+  @Roles(UserRole.SUPER_ADMIN, UserRole.OWNER)
   @Post()
   @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: CreateInviteDto, @CurrentUser() user: JwtPayload) {
