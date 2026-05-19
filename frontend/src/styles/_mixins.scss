@@ -1,0 +1,68 @@
+@use 'variables' as *;
+
+@mixin card {
+  background: #fff;
+  border-radius: $radius-md;
+  border: 1px solid $gray-200;
+  box-shadow: $shadow-card;
+}
+
+@mixin form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid $gray-300;
+  border-radius: $radius-sm;
+  font-size: 14px;
+  line-height: 1.4;
+  color: $gray-900;
+  background: #fff;
+  outline: none;
+  transition: border-color $transition, box-shadow $transition;
+
+  &::placeholder {
+    color: $gray-400;
+  }
+
+  &:focus {
+    border-color: $accent;
+    box-shadow: 0 0 0 3px $accent-focus;
+  }
+}
+
+@mixin btn-primary($full-width: false) {
+  @if $full-width { width: 100%; }
+  padding: 10px 16px;
+  background: $accent;
+  color: #fff;
+  border: none;
+  border-radius: $radius-sm;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background $transition, opacity $transition;
+
+  &:hover:not(:disabled) {
+    background: $accent-hover;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+@mixin field-error {
+  display: block;
+  margin-top: 6px;
+  font-size: 12px;
+  color: #ef4444;
+}
+
+@mixin label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  color: $gray-700;
+}

@@ -1,0 +1,113 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.page {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $gray-50;
+  padding: 16px;
+}
+
+.card {
+  @include card;
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+}
+
+/* Loading */
+.loadingText {
+  font-size: 14px;
+  color: $gray-500;
+}
+
+/* Error / Success */
+.icon {
+  font-size: 36px;
+  margin-bottom: 16px;
+}
+
+.errorTitle,
+.successTitle {
+  margin: 0 0 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: $gray-900;
+}
+
+.errorMessage {
+  margin: 0 0 24px;
+  font-size: 14px;
+  color: $gray-500;
+}
+
+.backLink {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  color: $accent;
+  cursor: pointer;
+
+  &:hover { text-decoration: underline; }
+}
+
+.successDesc {
+  margin: 0;
+  font-size: 14px;
+  color: $gray-500;
+}
+
+/* Form */
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: $gray-900;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: $gray-500;
+
+  strong {
+    color: $gray-700;
+    font-weight: 500;
+  }
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  @include label;
+}
+
+.input {
+  @include form-input;
+}
+
+.error {
+  @include field-error;
+}
+
+.submitBtn {
+  @include btn-primary($full-width: true);
+  margin-top: 4px;
+}

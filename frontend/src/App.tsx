@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { LoginPage } from './pages/Login';
 import { ActivatePage } from './pages/Activate';
+import { SuperAdminPage } from './pages/SuperAdmin';
 import { useAuthStore } from './store/auth.store';
 import { UserRole } from './types';
 
@@ -40,7 +41,7 @@ function App() {
           path="/superadmin/dashboard"
           element={
             <ProtectedRoute roles={[UserRole.SUPER_ADMIN]}>
-              <Placeholder label="SuperAdmin Dashboard" />
+              <SuperAdminPage />
             </ProtectedRoute>
           }
         />

@@ -1,5 +1,5 @@
 import api from '../lib/axios';
-import type { InviteValidation } from '../types';
+import type { Invite, InviteValidation } from '../types';
 
 export type ActivateDto = {
   token: string;
@@ -9,6 +9,15 @@ export type ActivateDto = {
 };
 
 export const invitesService = {
+  async getAll(): Promise<Invite[]> {
+    const res = await api.get<Invite[]>('/invites');
+    return res.data;
+  },
+
+  async create(email: string): Promise<void> {
+    await api.post('/invites', { email });
+  },
+
   async validate(token: string): Promise<InviteValidation> {
     const res = await api.get<InviteValidation>(`/invites/validate/${token}`);
     return res.data;

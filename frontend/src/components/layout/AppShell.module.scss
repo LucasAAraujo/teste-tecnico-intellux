@@ -1,0 +1,63 @@
+@use '../../styles/variables' as *;
+
+.shell {
+  min-height: 100svh;
+  background: $gray-50;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 56px;
+  padding: 0 24px;
+  background: #fff;
+  border-bottom: 1px solid $gray-200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-size: 14px;
+  font-weight: 600;
+  color: $gray-900;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.userName {
+  font-size: 14px;
+  color: $gray-500;
+}
+
+.logoutBtn {
+  font-size: 14px;
+  color: $gray-400;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: color $transition;
+
+  &:hover {
+    color: $gray-700;
+  }
+}
+
+.main {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.pageTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: $gray-900;
+  margin: 0 0 24px;
+}

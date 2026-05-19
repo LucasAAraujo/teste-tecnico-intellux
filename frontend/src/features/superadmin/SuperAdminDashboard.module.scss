@@ -1,0 +1,43 @@
+@use '../../styles/variables' as *;
+
+.section {
+  & + & {
+    margin-top: 32px;
+  }
+}
+
+.sectionTitle {
+  margin: 0 0 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $gray-500;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @media (min-width: 640px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.skeletonCard {
+  height: 96px;
+  background: $gray-100;
+  border-radius: 12px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.errorText {
+  font-size: 14px;
+  color: #ef4444;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}

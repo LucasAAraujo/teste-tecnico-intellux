@@ -1,0 +1,65 @@
+@use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.page {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: $gray-50;
+  padding: 16px;
+}
+
+.card {
+  @include card;
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: $gray-900;
+  letter-spacing: -0.3px;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  color: $gray-500;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  @include label;
+}
+
+.input {
+  @include form-input;
+}
+
+.error {
+  @include field-error;
+}
+
+.submitBtn {
+  @include btn-primary($full-width: true);
+  margin-top: 4px;
+}
