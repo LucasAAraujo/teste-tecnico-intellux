@@ -13,7 +13,7 @@ import { TenancyGuard } from './tenancy.guard';
   imports: [
     JwtModule.register({
       secret: process.env.JWT_SECRET ?? 'changeme',
-      signOptions: { expiresIn: '7d' },
+      signOptions: { expiresIn: '8h' },
     }),
     TypeOrmModule.forFeature([User]),
   ],
