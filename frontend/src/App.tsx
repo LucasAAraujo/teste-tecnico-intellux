@@ -4,6 +4,7 @@ import { LoginPage } from './pages/Login';
 import { ActivatePage } from './pages/Activate';
 import { SuperAdminPage } from './pages/SuperAdmin';
 import { OwnerPage } from './pages/Owner';
+import { WorkspacePage } from './pages/Workspace';
 import { useAuthStore } from './store/auth.store';
 import { UserRole } from './types';
 
@@ -58,7 +59,7 @@ function App() {
           path="/workspace"
           element={
             <ProtectedRoute roles={[UserRole.OWNER, UserRole.USER]}>
-              <Placeholder label="Workspace" />
+              <WorkspacePage />
             </ProtectedRoute>
           }
         />

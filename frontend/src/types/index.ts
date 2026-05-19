@@ -39,6 +39,37 @@ export type Member = {
   createdAt: string;
 };
 
+export const FileType = {
+  TEXT: 'TEXT',
+  IMAGE: 'IMAGE',
+} as const;
+export type FileType = (typeof FileType)[keyof typeof FileType];
+
+export type FileUploader = {
+  id: string;
+  name: string;
+};
+
+export type FileItem = {
+  id: string;
+  organizationId: string;
+  createdBy: string;
+  name: string;
+  type: FileType;
+  mimeType: string;
+  sizeBytes: number;
+  uploadedAt: string;
+  uploader?: FileUploader;
+};
+
+export type FileFilters = {
+  type?: FileType;
+  search?: string;
+  from?: string;
+  to?: string;
+  userId?: string;
+};
+
 export type Invite = {
   id: string;
   email: string;

@@ -36,7 +36,10 @@ export class FilesService {
   }
 
   findAll(query: FileFilterDto, caller: JwtPayload): Promise<FileEntity[]> {
-    const qb = this.fileRepo.createQueryBuilder('file');
+    const qb = this.fileRepo
+      .createQueryBuilder('file')
+      .leftJoin('file.uploader', 'uploader')
+      .addSelect(['uploader.id', 'uploader.name']);
 
     if (caller.role === UserRole.SUPER_ADMIN) {
       // sem filtro de org — acesso irrestrito
