@@ -3,12 +3,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import api from '../lib/axios';
-import { useAuthStore } from '../stores/auth.store';
+import { useAuthStore } from '../store/auth.store';
+import { UserRole } from '../types';
 
 const schema = z.object({
-  email: z.string().email('Email inválido'),
-  password: z.string().min(6, 'Mínimo 6 caracteres'),
+  email: z.email('Email inválido'),
+  password: z.string().min(8, 'Mínimo 8 caracteres'),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -25,9 +25,11 @@ export function LoginPage() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      const res = await api.post<{ access_token: string }>('/auth/login', data);
-      login(res.data.access_token);
-      navigate('/');
+      await login(data.email, data.password);
+      const user = useAuthStore.getState().user;
+      if (user?.role === UserRole.SUPER_ADMIN) navigate('/superadmin/dashboard');
+      else if (user?.role === UserRole.OWNER) navigate('/owner/dashboard');
+      else navigate('/workspace');
     } catch (err: unknown) {
       const msg =
         (err as { response?: { data?: { message?: string } } }).response?.data?.message;
