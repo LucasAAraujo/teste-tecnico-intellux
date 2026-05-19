@@ -1,0 +1,16 @@
+@use '../styles/variables' as *;
+
+.section {
+  & + & {
+    margin-top: 40px;
+  }
+}
+
+.sectionTitle {
+  margin: 0 0 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: $gray-500;
+}

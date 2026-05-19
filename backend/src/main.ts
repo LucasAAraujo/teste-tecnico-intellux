@@ -1,13 +1,15 @@
 import 'dotenv/config';
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { join } from 'path';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/http-exception.filter';
 import { ResponseInterceptor } from './common/response.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.use(helmet());
   app.enableCors({
@@ -15,6 +17,8 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
+
+  app.useStaticAssets(join(process.cwd(), 'uploads'), { prefix: '/uploads' });
 
   app.setGlobalPrefix('api');
 
