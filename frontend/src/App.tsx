@@ -3,6 +3,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { LoginPage } from './pages/Login';
 import { ActivatePage } from './pages/Activate';
 import { SuperAdminPage } from './pages/SuperAdmin';
+import { OwnerPage } from './pages/Owner';
 import { useAuthStore } from './store/auth.store';
 import { UserRole } from './types';
 
@@ -21,7 +22,7 @@ function ProtectedRoute({
 
 function Placeholder({ label }: { label: string }) {
   return (
-    <div className="flex items-center justify-center min-h-screen text-gray-400 text-sm">
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '100svh', fontSize: 14, color: '#9ca3af' }}>
       {label} — em construção
     </div>
   );
@@ -49,7 +50,7 @@ function App() {
           path="/owner/dashboard"
           element={
             <ProtectedRoute roles={[UserRole.OWNER]}>
-              <Placeholder label="Owner Dashboard" />
+              <OwnerPage />
             </ProtectedRoute>
           }
         />

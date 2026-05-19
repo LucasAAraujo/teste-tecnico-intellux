@@ -1,0 +1,43 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.card {
+  @include card;
+  padding: 24px;
+}
+
+.title {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 600;
+  color: $gray-900;
+}
+
+.description {
+  margin: 0 0 20px;
+  font-size: 12px;
+  color: $gray-400;
+}
+
+.row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.inputWrapper {
+  flex: 1;
+}
+
+.input {
+  @include form-input;
+}
+
+.error {
+  @include field-error;
+}
+
+.submitBtn {
+  @include btn-primary;
+  flex-shrink: 0;
+}

@@ -31,6 +31,14 @@ export type Organization = {
   updatedAt: string;
 };
 
+export type Member = {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  createdAt: string;
+};
+
 export type Invite = {
   id: string;
   email: string;
