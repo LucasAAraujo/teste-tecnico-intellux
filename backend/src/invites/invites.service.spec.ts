@@ -32,8 +32,8 @@ const makeInvite = (overrides: Partial<Invite> = {}): Invite =>
     ...overrides,
   }) as Invite;
 
-const ownerCaller: JwtPayload = { sub: 'owner-id', email: 'owner@x.com', role: UserRole.OWNER, organizationId: 'org-1' };
-const adminCaller: JwtPayload = { sub: 'admin-id', email: 'admin@x.com', role: UserRole.SUPER_ADMIN, organizationId: null };
+const ownerCaller: JwtPayload = { sub: 'owner-id', name: 'Owner', email: 'owner@x.com', role: UserRole.OWNER, organizationId: 'org-1' };
+const adminCaller: JwtPayload = { sub: 'admin-id', name: 'Admin', email: 'admin@x.com', role: UserRole.SUPER_ADMIN, organizationId: null };
 
 describe('InvitesService', () => {
   let service: InvitesService;

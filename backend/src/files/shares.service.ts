@@ -11,7 +11,7 @@ import type { JwtPayload } from '../auth/auth.service';
 import { FileEntity } from '../database/entities/file.entity';
 import { FileShare } from '../database/entities/file-share.entity';
 import { User, UserRole } from '../database/entities/user.entity';
-import { ShareFileDto } from './files.dto';
+import { ShareFileDto } from './dto/files.dto';
 
 @Injectable()
 export class SharesService {

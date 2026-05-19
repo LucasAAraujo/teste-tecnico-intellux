@@ -1,5 +1,5 @@
 import { Controller, Get } from '@nestjs/common';
-import { CurrentUser } from '../auth/auth.decorators';
+import { CurrentUser } from '../common/decorators/auth.decorators';
 import type { JwtPayload } from '../auth/auth.service';
 import { UsersService } from './users.service';
 

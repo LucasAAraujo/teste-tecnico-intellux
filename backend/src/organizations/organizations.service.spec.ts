@@ -6,8 +6,8 @@ import { Organization } from '../database/entities/organization.entity';
 import { User, UserRole } from '../database/entities/user.entity';
 import { OrganizationsService } from './organizations.service';
 
-const adminCaller: JwtPayload = { sub: 'a', email: 'a@a.com', role: UserRole.SUPER_ADMIN, organizationId: null };
-const ownerCaller: JwtPayload = { sub: 'b', email: 'b@b.com', role: UserRole.OWNER, organizationId: 'org-1' };
+const adminCaller: JwtPayload = { sub: 'a', name: 'Admin', email: 'a@a.com', role: UserRole.SUPER_ADMIN, organizationId: null };
+const ownerCaller: JwtPayload = { sub: 'b', name: 'Owner', email: 'b@b.com', role: UserRole.OWNER, organizationId: 'org-1' };
 
 describe('OrganizationsService', () => {
   let service: OrganizationsService;

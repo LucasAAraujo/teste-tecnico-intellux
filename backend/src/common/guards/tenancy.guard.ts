@@ -1,7 +1,7 @@
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UserRole } from '../database/entities/user.entity';
-import { IS_PUBLIC_KEY } from './auth.decorators';
+import { UserRole } from '../../database/entities/user.entity';
+import { IS_PUBLIC_KEY } from '../decorators/auth.decorators';
 
 @Injectable()
 export class TenancyGuard implements CanActivate {

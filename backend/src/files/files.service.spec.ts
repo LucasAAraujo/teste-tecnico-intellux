@@ -6,9 +6,9 @@ import { FileEntity, FileType } from '../database/entities/file.entity';
 import { UserRole } from '../database/entities/user.entity';
 import { FilesService } from './files.service';
 
-const ownerCaller: JwtPayload = { sub: 'u1', email: 'o@o.com', role: UserRole.OWNER, organizationId: 'org-1' };
-const adminCaller: JwtPayload = { sub: 'sa', email: 'a@a.com', role: UserRole.SUPER_ADMIN, organizationId: null };
-const userCaller: JwtPayload = { sub: 'u2', email: 'u@u.com', role: UserRole.USER, organizationId: 'org-1' };
+const ownerCaller: JwtPayload = { sub: 'u1', name: 'Owner', email: 'o@o.com', role: UserRole.OWNER, organizationId: 'org-1' };
+const adminCaller: JwtPayload = { sub: 'sa', name: 'Admin', email: 'a@a.com', role: UserRole.SUPER_ADMIN, organizationId: null };
+const userCaller: JwtPayload = { sub: 'u2', name: 'User', email: 'u@u.com', role: UserRole.USER, organizationId: 'org-1' };
 
 const makeFile = (overrides: Partial<FileEntity> = {}): FileEntity =>
   ({ id: 'f1', organizationId: 'org-1', createdBy: 'u1', name: 'test.txt', type: FileType.TEXT, storagePath: './uploads/f1.txt', ...overrides }) as FileEntity;

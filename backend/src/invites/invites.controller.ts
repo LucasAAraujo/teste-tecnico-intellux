@@ -1,8 +1,8 @@
 import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post } from '@nestjs/common';
-import { CurrentUser, Public, Roles } from '../auth/auth.decorators';
+import { CurrentUser, Public, Roles } from '../common/decorators/auth.decorators';
 import type { JwtPayload } from '../auth/auth.service';
 import { UserRole } from '../database/entities/user.entity';
-import { ActivateInviteDto, CreateInviteDto } from './invites.dto';
+import { ActivateInviteDto, CreateInviteDto } from './dto/invites.dto';
 import { InvitesService } from './invites.service';
 
 @Controller('invites')

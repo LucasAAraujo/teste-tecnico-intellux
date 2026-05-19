@@ -1,5 +1,5 @@
 import { IsDateString, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
-import { FileType } from '../database/entities/file.entity';
+import { FileType } from '../../database/entities/file.entity';
 
 export class FileFilterDto {
   @IsOptional()

@@ -7,7 +7,7 @@ import { FileShare } from '../database/entities/file-share.entity';
 import { User, UserRole } from '../database/entities/user.entity';
 import { SharesService } from './shares.service';
 
-const caller: JwtPayload = { sub: 'u1', email: 'o@o.com', role: UserRole.OWNER, organizationId: 'org-1' };
+const caller: JwtPayload = { sub: 'u1', name: 'Owner', email: 'o@o.com', role: UserRole.OWNER, organizationId: 'org-1' };
 const makeFile = (overrides = {}) => ({ id: 'f1', organizationId: 'org-1', createdBy: 'u1', ...overrides }) as FileEntity;
 const makeUser = (overrides = {}) => ({ id: 'u2', organizationId: 'org-1', ...overrides }) as User;
 

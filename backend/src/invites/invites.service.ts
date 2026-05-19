@@ -13,7 +13,7 @@ import { InviteRole, Invite } from '../database/entities/invite.entity';
 import { Organization } from '../database/entities/organization.entity';
 import { User, UserRole } from '../database/entities/user.entity';
 import { JwtPayload } from '../auth/auth.service';
-import { ActivateInviteDto, CreateInviteDto } from './invites.dto';
+import { ActivateInviteDto, CreateInviteDto } from './dto/invites.dto';
 import { MailService } from './mail.service';
 
 @Injectable()

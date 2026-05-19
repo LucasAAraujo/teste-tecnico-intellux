@@ -9,7 +9,7 @@ import { Repository } from 'typeorm';
 import type { JwtPayload } from '../auth/auth.service';
 import { FileEntity, FileType } from '../database/entities/file.entity';
 import { UserRole } from '../database/entities/user.entity';
-import { FileFilterDto } from './files.dto';
+import { FileFilterDto } from './dto/files.dto';
 
 @Injectable()
 export class FilesService {

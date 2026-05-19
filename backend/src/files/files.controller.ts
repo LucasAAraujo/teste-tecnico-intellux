@@ -17,9 +17,9 @@ import { mkdirSync } from 'fs';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
 import { randomUUID } from 'crypto';
-import { CurrentUser } from '../auth/auth.decorators';
+import { CurrentUser } from '../common/decorators/auth.decorators';
 import type { JwtPayload } from '../auth/auth.service';
-import { FileFilterDto, ShareFileDto } from './files.dto';
+import { FileFilterDto, ShareFileDto } from './dto/files.dto';
 import { FilesService } from './files.service';
 import { SharesService } from './shares.service';
 
@@ -31,7 +31,7 @@ const multerOptions = {
     },
     filename: (_req, file, cb) => cb(null, `${randomUUID()}${extname(file.originalname)}`),
   }),
-  fileFilter: (_req, file, cb) => {
+  fileFilter: (_req, file: Express.Multer.File, cb: (err: Error | null, accept: boolean) => void) => {
     const allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp', 'text/plain', 'text/csv', 'application/pdf'];
     allowed.includes(file.mimetype)
       ? cb(null, true)
