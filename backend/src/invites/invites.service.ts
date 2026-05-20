@@ -39,19 +39,22 @@ export class InvitesService {
     const role = caller.role === UserRole.SUPER_ADMIN ? InviteRole.OWNER : InviteRole.USER;
     const organizationId = caller.role === UserRole.SUPER_ADMIN ? null : caller.organizationId;
 
-    const pending = await this.inviteRepo.findOne({
-      where: { email: dto.email, acceptedAt: IsNull() },
-    });
-    if (pending && pending.expiresAt > new Date()) {
-      throw new ConflictException('Já existe um convite pendente para este email');
-    }
-
     const token = randomUUID();
     const expiresAt = new Date(Date.now() + 48 * 60 * 60 * 1000);
 
-    await this.inviteRepo.save(
-      this.inviteRepo.create({ email: dto.email, role, token, expiresAt, organizationId, createdBy: caller.sub }),
-    );
+    const existing = await this.inviteRepo.findOne({
+      where: { email: dto.email, acceptedAt: IsNull() },
+    });
+
+    if (existing) {
+      existing.token = token;
+      existing.expiresAt = expiresAt;
+      await this.inviteRepo.save(existing);
+    } else {
+      await this.inviteRepo.save(
+        this.inviteRepo.create({ email: dto.email, role, token, expiresAt, organizationId, createdBy: caller.sub }),
+      );
+    }
 
     await this.mailService.sendInvite(dto.email, token, role);
   }

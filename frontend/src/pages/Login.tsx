@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -38,9 +39,51 @@ export function LoginPage() {
     }
   };
 
+  const [hintOpen, setHintOpen] = useState(false);
+  const hintRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!hintOpen) return;
+    function handleClick(e: MouseEvent) {
+      if (hintRef.current && !hintRef.current.contains(e.target as Node)) {
+        setHintOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, [hintOpen]);
+
   return (
     <div className={s.page}>
       <div className={s.card}>
+        <div ref={hintRef} className={s.hintWrapper}>
+          <button
+            className={s.hintTrigger}
+            onClick={() => setHintOpen((o) => !o)}
+            aria-label="Credenciais de demonstração"
+            title="Credenciais de demonstração"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <circle cx="12" cy="12" r="10" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 16v-4m0-4h.01" />
+            </svg>
+          </button>
+
+          {hintOpen && (
+            <div className={s.hintCard}>
+              <p className={s.hintTitle}>Acesse a conta Super Admin</p>
+              <div className={s.hintRow}>
+                <span className={s.hintLabel}>Email</span>
+                <code className={s.hintValue}>admin@intellux.com</code>
+              </div>
+              <div className={s.hintRow}>
+                <span className={s.hintLabel}>Senha</span>
+                <code className={s.hintValue}>changeme</code>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className={s.header}>
           <h1 className={s.title}>Intellux Drive</h1>
           <p className={s.subtitle}>Entre na sua conta</p>

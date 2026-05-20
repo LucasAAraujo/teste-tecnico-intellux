@@ -80,3 +80,87 @@
   padding: 12px 16px;
   font-size: 15px;
 }
+
+.hintWrapper {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.hintTrigger {
+  position: static;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: $accent;
+  color: $secondary;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  transition: transform 0.15s, box-shadow 0.15s;
+  z-index: 100;
+
+  svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  }
+}
+
+.hintCard {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: #fff;
+  border-radius: $radius-md;
+  padding: 16px 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  border-top: 3px solid $accent;
+  min-width: 240px;
+  z-index: 100;
+  animation: fadeUp 0.18s ease;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.hintTitle {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  color: $secondary;
+}
+
+.hintRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+
+  &:last-child { margin-bottom: 0; }
+}
+
+.hintLabel {
+  font-size: 12px;
+  color: $gray-500;
+  width: 36px;
+  flex-shrink: 0;
+}
+
+.hintValue {
+  font-size: 12px;
+  font-family: monospace;
+  background: rgba(11, 47, 58, 0.07);
+  color: $secondary;
+  padding: 2px 6px;
+  border-radius: 4px;
+}

@@ -9,14 +9,18 @@ export class MailService {
 
   constructor() {
     this.transporter = createTransport({
-      host: process.env.MAIL_HOST ?? 'localhost',
-      port: Number(process.env.MAIL_PORT ?? 1025),
-      ignoreTLS: true,
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT ?? 465),
+      secure: true,
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
+      },
     });
   }
 
   async sendInvite(to: string, token: string, role: InviteRole): Promise<void> {
-    const baseUrl = process.env.APP_URL ?? 'http://localhost:5173';
+    const baseUrl = process.env.FRONTEND_URL ?? 'http://localhost:5173';
     const link = `${baseUrl}/activate?token=${token}`;
     const subject =
       role === InviteRole.OWNER
@@ -24,7 +28,7 @@ export class MailService {
         : 'Você foi convidado para uma organização no Intellux';
 
     await this.transporter.sendMail({
-      from: process.env.MAIL_FROM ?? 'noreply@intellux.com',
+      from: `"Intellux Drive" <${process.env.SMTP_USER}>`,
       to,
       subject,
       html: `
