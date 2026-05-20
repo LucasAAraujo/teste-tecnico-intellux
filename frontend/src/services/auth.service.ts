@@ -11,8 +11,8 @@ function decodeJwt(token: string): AuthUser | null {
 
 export const authService = {
   async login(email: string, password: string): Promise<{ token: string; user: AuthUser }> {
-    const res = await api.post<{ access_token: string }>('/auth/login', { email, password });
-    const token = res.data.access_token;
+    const res = await api.post<{ data: { accessToken: string } }>('/auth/login', { email, password });
+    const token = res.data.data.accessToken;
     const user = decodeJwt(token);
     if (!user) throw new Error('Token inválido recebido do servidor');
     return { token, user };
