@@ -20,13 +20,15 @@ export function AppShell({ children, title }: Props) {
   return (
     <div className={s.shell}>
       <header className={s.header}>
-        <span className={s.logo}>Intellux Drive</span>
-        <nav className={s.nav}>
-          <span className={s.userName}>{user?.name}</span>
-          <button onClick={handleLogout} className={s.logoutBtn}>
-            Sair
-          </button>
-        </nav>
+        <div className={s.headerInner}>
+          <span className={s.logo}>Intellux Drive</span>
+          <nav className={s.nav}>
+            <span className={s.userName}>{user?.name}</span>
+            <button onClick={handleLogout} className={s.logoutBtn}>
+              Sair
+            </button>
+          </nav>
+        </div>
       </header>
       <main className={s.main}>
         {title && <h1 className={s.pageTitle}>{title}</h1>}

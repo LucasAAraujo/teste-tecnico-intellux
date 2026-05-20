@@ -9,55 +9,70 @@
   position: sticky;
   top: 0;
   z-index: 10;
-  height: 56px;
+  height: 58px;
+  background: $accent;
+  border-bottom: none;
+}
+
+.headerInner {
+  max-width: 960px;
+  margin: 0 auto;
   padding: 0 24px;
-  background: #fff;
-  border-bottom: 1px solid $gray-200;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
 .logo {
-  font-size: 14px;
-  font-weight: 600;
-  color: $gray-900;
+  font-size: 13px;
+  font-weight: 700;
+  color: $accent;
+  background: $secondary;
+  padding: 5px 14px;
+  border-radius: 100px;
+  letter-spacing: -0.2px;
+  white-space: nowrap;
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 
 .userName {
-  font-size: 14px;
-  color: $gray-500;
+  font-size: 13px;
+  font-weight: 500;
+  color: $secondary;
 }
 
 .logoutBtn {
-  font-size: 14px;
-  color: $gray-400;
-  background: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: $accent;
+  background: $secondary;
   border: none;
   cursor: pointer;
-  padding: 0;
-  transition: color $transition;
+  padding: 5px 14px;
+  border-radius: 100px;
+  white-space: nowrap;
+  transition: opacity $transition;
 
   &:hover {
-    color: $gray-700;
+    opacity: 0.85;
   }
 }
 
 .main {
   max-width: 960px;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 36px 24px;
 }
 
 .pageTitle {
   font-size: 20px;
-  font-weight: 600;
-  color: $gray-900;
-  margin: 0 0 24px;
+  font-weight: 700;
+  color: $secondary;
+  margin: 0 0 28px;
 }

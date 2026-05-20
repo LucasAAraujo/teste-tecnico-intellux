@@ -96,10 +96,11 @@
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
-  transition: background $transition;
+  transition: background $transition, box-shadow $transition;
 
   &:hover {
     background: $gray-50;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 }
 
@@ -185,19 +186,19 @@
   }
 
   &:hover {
-    color: $accent;
-    border-color: $accent;
-    background: rgba(124, 58, 237, 0.04);
+    color: $secondary;
+    border-color: $secondary;
+    background: rgba(11, 47, 58, 0.05);
   }
 }
 
 .sharedBadge {
   flex-shrink: 0;
   font-size: 11px;
-  font-weight: 500;
-  color: $accent;
-  background: rgba(124, 58, 237, 0.08);
-  border: 1px solid rgba(124, 58, 237, 0.2);
+  font-weight: 600;
+  color: $secondary;
+  background: rgba(214, 251, 73, 0.2);
+  border: 1px solid rgba(214, 251, 73, 0.55);
   border-radius: 100px;
   padding: 2px 10px;
   white-space: nowrap;

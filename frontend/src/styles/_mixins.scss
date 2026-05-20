@@ -33,11 +33,11 @@
   @if $full-width { width: 100%; }
   padding: 10px 16px;
   background: $accent;
-  color: #fff;
+  color: $secondary;
   border: none;
   border-radius: $radius-sm;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
   transition: background $transition, opacity $transition;

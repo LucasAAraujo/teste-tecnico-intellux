@@ -52,13 +52,13 @@
 .th {
   padding: 10px 16px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: $gray-500;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.65);
   text-align: left;
-  border-bottom: 1px solid $gray-200;
-  background: $gray-50;
+  border-bottom: none;
+  background: $secondary;
 }
 
 .tr {
