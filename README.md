@@ -13,7 +13,7 @@ Plataforma de gestão e compartilhamento de arquivos multi-tenant. Cada organiza
 | ORM | TypeORM 0.3 |
 | Frontend | React 19 + Vite + TypeScript |
 | Autenticação | JWT (Passport) |
-| E-mail (dev) | MailHog |
+| E-mail | Nodemailer + SMTP (Hostinger) |
 
 ---
 
@@ -22,7 +22,7 @@ Plataforma de gestão e compartilhamento de arquivos multi-tenant. Cada organiza
 - Node.js >= 18
 - npm >= 9
 - MySQL 8 rodando localmente (ou via Docker)
-- Docker + Docker Compose (opcional, para MailHog)
+- Conta SMTP ativa (ex: Hostinger) para envio de e-mails de convite
 
 ---
 
@@ -84,10 +84,11 @@ SUPER_ADMIN_NAME=Super Admin
 JWT_SECRET=troque-por-um-segredo-forte
 JWT_EXPIRES_IN=7d
 
-# E-mail (MailHog em dev)
-MAIL_HOST=localhost
-MAIL_PORT=1025
-MAIL_FROM=noreply@intellux.com
+# E-mail (SMTP)
+SMTP_HOST=smtp.hostinger.com
+SMTP_PORT=465
+SMTP_USER=voce@seudominio.com
+SMTP_PASS=sua-senha-smtp
 
 # URL do frontend (CORS)
 APP_URL=http://localhost:5173
@@ -95,6 +96,8 @@ FRONTEND_URL=http://localhost:5173
 
 NODE_ENV=development
 ```
+
+> O envio usa **Nodemailer com SSL** (`secure: true`, porta 465). As configurações acima são compatíveis com a Hostinger — substitua `SMTP_USER` e `SMTP_PASS` pelas credenciais da sua conta de e-mail.
 
 ### 2.3 Executar as migrations
 
@@ -156,19 +159,11 @@ O frontend sobe em **http://localhost:5173**.
 
 ---
 
-## 4. E-mail (MailHog)
+## 4. E-mail (SMTP)
 
-Em desenvolvimento, os e-mails de convite são capturados pelo MailHog ao invés de serem enviados de verdade.
+Os e-mails de convite são enviados via **Nodemailer** usando SMTP com SSL. Configure as variáveis `SMTP_*` no `.env` com as credenciais do seu provedor (ex: Hostinger, porta 465).
 
-```bash
-# Na raiz do projeto
-docker compose up -d
-```
-
-| Interface | URL |
-|---|---|
-| SMTP | `localhost:1025` |
-| Web UI | http://localhost:8025 |
+Para testar localmente sem um servidor SMTP real, você pode usar um serviço como [Mailtrap](https://mailtrap.io) — basta substituir `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER` e `SMTP_PASS` pelas credenciais do inbox de teste.
 
 ---
 
