@@ -49,6 +49,14 @@ export function useImageFiles(refreshKey = 0) {
       });
   }, [debouncedSearch, from, to, userId, refreshKey]);
 
+  function clearFilters() {
+    setSearch('');
+    setDebouncedSearch('');
+    setFrom('');
+    setTo('');
+    setUserId('');
+  }
+
   return {
     state,
     members,
@@ -62,5 +70,6 @@ export function useImageFiles(refreshKey = 0) {
     setTo,
     userId,
     setUserId,
+    clearFilters,
   };
 }

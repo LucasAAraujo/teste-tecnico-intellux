@@ -1,4 +1,5 @@
 @use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
 
 .section {
   & + & {
@@ -35,6 +36,117 @@
 .errorText {
   font-size: 14px;
   color: #ef4444;
+}
+
+// ── Organizations table ──────────────────────────────────
+.tableWrap {
+  @include card;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th {
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $gray-500;
+  text-align: left;
+  border-bottom: 1px solid $gray-200;
+  background: $gray-50;
+}
+
+.tr {
+  &:not(:last-child) {
+    border-bottom: 1px solid $gray-100;
+  }
+
+  &:hover {
+    background: $gray-50;
+  }
+}
+
+.td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: $gray-900;
+}
+
+.tdMuted {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: $gray-500;
+}
+
+.skeletonRow {
+  height: 46px;
+  background: $gray-100;
+  border-radius: $radius-sm;
+  margin-bottom: 6px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.emptyText {
+  font-size: 14px;
+  color: $gray-500;
+  padding: 24px 0;
+}
+
+// ── Pagination ───────────────────────────────────────────
+.pagination {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.pageBtn {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 6px;
+  border-radius: $radius-sm;
+  border: 1px solid $gray-200;
+  background: #fff;
+  color: $gray-700;
+  font-size: 13px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background $transition, border-color $transition, color $transition;
+
+  &:hover:not(:disabled) {
+    background: $gray-50;
+    border-color: $gray-300;
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+}
+
+.pageBtnActive {
+  background: $accent;
+  color: #fff;
+  border-color: $accent;
+
+  &:hover:not(:disabled) {
+    background: $accent-hover;
+    border-color: $accent-hover;
+  }
+}
+
+.pageInfo {
+  font-size: 12px;
+  color: $gray-400;
+  margin-left: 4px;
 }
 
 @keyframes pulse {

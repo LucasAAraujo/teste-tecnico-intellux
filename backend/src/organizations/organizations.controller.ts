@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CurrentUser } from '../common/decorators/auth.decorators';
 import type { JwtPayload } from '../auth/auth.service';
 import { OrganizationsService } from './organizations.service';
@@ -8,8 +8,12 @@ export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
 
   @Get()
-  findAll(@CurrentUser() user: JwtPayload) {
-    return this.organizationsService.findAll(user);
+  findAll(
+    @CurrentUser() user: JwtPayload,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+  ) {
+    return this.organizationsService.findAll(user, +page, +limit);
   }
 
   @Get(':organizationId/members')

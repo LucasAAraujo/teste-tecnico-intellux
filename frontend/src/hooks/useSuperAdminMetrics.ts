@@ -24,7 +24,7 @@ export function useSuperAdminMetrics(refreshKey = 0): State {
         setState({
           status: 'ready',
           metrics: {
-            totalOrgs: orgs.length,
+            totalOrgs: orgs.total,
             totalInvites: invites.length,
             acceptedInvites: accepted,
             acceptanceRate:

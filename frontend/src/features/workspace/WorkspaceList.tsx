@@ -1,7 +1,27 @@
+import { useState } from 'react';
 import { useFiles } from '../../hooks/useFiles';
 import type { FileItem } from '../../types';
 import { UserRole } from '../../types';
 import s from './WorkspaceList.module.scss';
+
+const API_BASE = (import.meta.env.VITE_API_URL as string | undefined ?? 'http://localhost:3000/api').replace(/\/api$/, '');
+
+async function downloadFile(storagePath: string, name: string) {
+  const filename = storagePath.replace(/^.*[/\\]/, '');
+  const url = `${API_BASE}/uploads/${filename}`;
+  try {
+    const resp = await fetch(url);
+    const blob = await resp.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(blobUrl);
+  } catch {
+    window.open(url, '_blank');
+  }
+}
 
 function formatDate(iso: string): string {
   return new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' }).format(
@@ -36,6 +56,14 @@ function ShareIcon() {
   );
 }
 
+function DownloadIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+    </svg>
+  );
+}
+
 type Props = {
   refreshKey?: number;
   onShare: (file: FileItem) => void;
@@ -48,15 +76,39 @@ export function WorkspaceList({ refreshKey = 0, onShare }: Props) {
     isOwner,
     currentUserId,
     currentUserRole,
-    search,
+    search: appliedSearch,
+    from: appliedFrom,
+    to: appliedTo,
+    userId: appliedUserId,
     setSearch,
-    from,
     setFrom,
-    to,
     setTo,
-    userId,
     setUserId,
+    clearFilters,
   } = useFiles(refreshKey);
+
+  const [draftSearch, setDraftSearch] = useState('');
+  const [draftFrom, setDraftFrom] = useState('');
+  const [draftTo, setDraftTo] = useState('');
+  const [draftUserId, setDraftUserId] = useState('');
+
+  const hasActiveDraft = !!(draftSearch || draftFrom || draftTo || draftUserId);
+  const hasApplied = !!(appliedSearch || appliedFrom || appliedTo || appliedUserId);
+
+  function applyFilters() {
+    setSearch(draftSearch);
+    setFrom(draftFrom);
+    setTo(draftTo);
+    setUserId(draftUserId);
+  }
+
+  function clearAll() {
+    setDraftSearch('');
+    setDraftFrom('');
+    setDraftTo('');
+    setDraftUserId('');
+    clearFilters();
+  }
 
   function canShare(file: FileItem): boolean {
     if (currentUserRole === UserRole.OWNER) return true;
@@ -75,8 +127,9 @@ export function WorkspaceList({ refreshKey = 0, onShare }: Props) {
             type="search"
             className={s.searchInput}
             placeholder="Buscar arquivo..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={draftSearch}
+            onChange={(e) => setDraftSearch(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') applyFilters(); }}
           />
         </div>
 
@@ -84,16 +137,16 @@ export function WorkspaceList({ refreshKey = 0, onShare }: Props) {
           <input
             type="date"
             className={s.dateInput}
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
+            value={draftFrom}
+            onChange={(e) => setDraftFrom(e.target.value)}
             title="De"
           />
           <span className={s.dateSeparator}>–</span>
           <input
             type="date"
             className={s.dateInput}
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
+            value={draftTo}
+            onChange={(e) => setDraftTo(e.target.value)}
             title="Até"
           />
         </div>
@@ -101,8 +154,8 @@ export function WorkspaceList({ refreshKey = 0, onShare }: Props) {
         {isOwner && members.length > 0 && (
           <select
             className={s.userSelect}
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
+            value={draftUserId}
+            onChange={(e) => setDraftUserId(e.target.value)}
           >
             <option value="">Todos os usuários</option>
             {members.map((m) => (
@@ -111,6 +164,15 @@ export function WorkspaceList({ refreshKey = 0, onShare }: Props) {
               </option>
             ))}
           </select>
+        )}
+
+        <button className={s.filterBtn} onClick={applyFilters}>
+          Filtrar
+        </button>
+        {(hasApplied || hasActiveDraft) && (
+          <button className={s.clearBtn} onClick={clearAll}>
+            Limpar
+          </button>
         )}
       </div>
 
@@ -158,9 +220,18 @@ export function WorkspaceList({ refreshKey = 0, onShare }: Props) {
                   </span>
                 )}
 
+                <button
+                  className={s.actionIconBtn}
+                  onClick={() => void downloadFile(file.storagePath, file.name)}
+                  title="Baixar"
+                  aria-label="Baixar arquivo"
+                >
+                  <DownloadIcon />
+                </button>
+
                 {canShare(file) && (
                   <button
-                    className={s.shareIconBtn}
+                    className={s.actionIconBtn}
                     onClick={() => onShare(file)}
                     title="Compartilhar"
                     aria-label="Compartilhar arquivo"

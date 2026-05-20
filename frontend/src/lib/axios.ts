@@ -5,7 +5,6 @@ const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL ?? 'http://localhost:3000/api',
 });
 
-// Read token from sessionStorage directly to avoid circular import:
 // axios → auth.store → auth.service → axios
 function getToken(): string | null {
   try {
@@ -25,7 +24,7 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  (res) => res,
+  (response) => response,
   (error: unknown) => {
     const status = (error as { response?: { status?: number } }).response?.status;
     if (status === 401) {

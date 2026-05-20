@@ -139,7 +139,33 @@
   color: $gray-300;
 }
 
-.shareIconBtn {
+.filterBtn {
+  @include btn-primary;
+  height: 38px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.clearBtn {
+  height: 38px;
+  padding: 0 14px;
+  border-radius: $radius-sm;
+  border: 1px solid $gray-200;
+  background: $gray-100;
+  color: $gray-700;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background $transition, border-color $transition;
+
+  &:hover {
+    background: $gray-200;
+    border-color: $gray-300;
+  }
+}
+
+.actionIconBtn {
   flex-shrink: 0;
   width: 30px;
   height: 30px;

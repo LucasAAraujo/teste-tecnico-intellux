@@ -7,9 +7,25 @@ import s from './ImageGrid.module.scss';
 
 const API_BASE = (import.meta.env.VITE_API_URL as string | undefined ?? 'http://localhost:3000/api').replace(/\/api$/, '');
 
-function imageUrl(storagePath: string): string {
+function fileUrl(storagePath: string): string {
   const filename = storagePath.replace(/^.*[/\\]/, '');
   return `${API_BASE}/uploads/${filename}`;
+}
+
+async function downloadFile(storagePath: string, name: string) {
+  const url = fileUrl(storagePath);
+  try {
+    const resp = await fetch(url);
+    const blob = await resp.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = blobUrl;
+    a.download = name;
+    a.click();
+    URL.revokeObjectURL(blobUrl);
+  } catch {
+    window.open(url, '_blank');
+  }
 }
 
 function formatDate(iso: string): string {
@@ -54,7 +70,7 @@ function LazyImage({ file, canShare, currentUserId, onClick, onShare }: LazyImag
     <div ref={wrapRef} className={s.cell}>
       {visible ? (
         <img
-          src={imageUrl(file.storagePath)}
+          src={fileUrl(file.storagePath)}
           alt={file.name}
           className={`${s.img} ${loaded ? s.imgLoaded : ''}`}
           onLoad={() => setLoaded(true)}
@@ -79,6 +95,15 @@ function LazyImage({ file, canShare, currentUserId, onClick, onShare }: LazyImag
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
           </svg>
         </button>
+        <button
+          className={s.downloadBtn}
+          onClick={(e) => { e.stopPropagation(); void downloadFile(file.storagePath, file.name); }}
+          aria-label="Baixar"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+          </svg>
+        </button>
         {canShare && (
           <button className={s.shareBtn} onClick={onShare} aria-label="Compartilhar">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -92,7 +117,7 @@ function LazyImage({ file, canShare, currentUserId, onClick, onShare }: LazyImag
   );
 }
 
-// ── Preview modal ────────────────────────────────────────
+// ── Preview modal ─────────────────────────────────────────
 type PreviewModalProps = {
   file: FileItem;
   onClose: () => void;
@@ -109,19 +134,28 @@ function PreviewModal({ file, onClose }: PreviewModalProps) {
     <div className={s.backdrop} onClick={onClose} role="dialog" aria-modal>
       <div className={s.modalContent} onClick={(e) => e.stopPropagation()}>
         <button className={s.closeBtn} onClick={onClose} aria-label="Fechar">✕</button>
-        <img src={imageUrl(file.storagePath)} alt={file.name} className={s.previewImg} />
+        <img src={fileUrl(file.storagePath)} alt={file.name} className={s.previewImg} />
         <div className={s.previewMeta}>
           <span className={s.previewName}>{file.name}</span>
           <span className={s.previewDate}>
             {file.uploader?.name ?? '—'} · {formatDate(file.uploadedAt)}
           </span>
+          <button
+            className={s.previewDownloadBtn}
+            onClick={() => void downloadFile(file.storagePath, file.name)}
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+            </svg>
+            Baixar
+          </button>
         </div>
       </div>
     </div>
   );
 }
 
-// ── ImageGrid ────────────────────────────────────────────
+// ── ImageGrid ─────────────────────────────────────────────
 type Props = {
   refreshKey?: number;
   onShare: (file: FileItem) => void;
@@ -134,16 +168,40 @@ export function ImageGrid({ refreshKey = 0, onShare }: Props) {
     members,
     isOwner,
     currentUserId,
-    search,
+    search: appliedSearch,
+    from: appliedFrom,
+    to: appliedTo,
+    userId: appliedUserId,
     setSearch,
-    from,
     setFrom,
-    to,
     setTo,
-    userId,
     setUserId,
+    clearFilters,
   } = useImageFiles(refreshKey);
+
+  const [draftSearch, setDraftSearch] = useState('');
+  const [draftFrom, setDraftFrom] = useState('');
+  const [draftTo, setDraftTo] = useState('');
+  const [draftUserId, setDraftUserId] = useState('');
   const [preview, setPreview] = useState<FileItem | null>(null);
+
+  const hasActiveDraft = !!(draftSearch || draftFrom || draftTo || draftUserId);
+  const hasApplied = !!(appliedSearch || appliedFrom || appliedTo || appliedUserId);
+
+  function applyFilters() {
+    setSearch(draftSearch);
+    setFrom(draftFrom);
+    setTo(draftTo);
+    setUserId(draftUserId);
+  }
+
+  function clearAll() {
+    setDraftSearch('');
+    setDraftFrom('');
+    setDraftTo('');
+    setDraftUserId('');
+    clearFilters();
+  }
 
   function canShare(file: FileItem): boolean {
     if (user?.role === UserRole.OWNER) return true;
@@ -162,8 +220,9 @@ export function ImageGrid({ refreshKey = 0, onShare }: Props) {
             type="search"
             className={s.searchInput}
             placeholder="Buscar imagem..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            value={draftSearch}
+            onChange={(e) => setDraftSearch(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') applyFilters(); }}
           />
         </div>
 
@@ -171,16 +230,16 @@ export function ImageGrid({ refreshKey = 0, onShare }: Props) {
           <input
             type="date"
             className={s.dateInput}
-            value={from}
-            onChange={(e) => setFrom(e.target.value)}
+            value={draftFrom}
+            onChange={(e) => setDraftFrom(e.target.value)}
             title="De"
           />
           <span className={s.dateSeparator}>–</span>
           <input
             type="date"
             className={s.dateInput}
-            value={to}
-            onChange={(e) => setTo(e.target.value)}
+            value={draftTo}
+            onChange={(e) => setDraftTo(e.target.value)}
             title="Até"
           />
         </div>
@@ -188,14 +247,23 @@ export function ImageGrid({ refreshKey = 0, onShare }: Props) {
         {isOwner && members.length > 0 && (
           <select
             className={s.userSelect}
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
+            value={draftUserId}
+            onChange={(e) => setDraftUserId(e.target.value)}
           >
             <option value="">Todos os usuários</option>
             {members.map((m) => (
               <option key={m.id} value={m.id}>{m.name}</option>
             ))}
           </select>
+        )}
+
+        <button className={s.filterBtn} onClick={applyFilters}>
+          Filtrar
+        </button>
+        {(hasApplied || hasActiveDraft) && (
+          <button className={s.clearBtn} onClick={clearAll}>
+            Limpar
+          </button>
         )}
       </div>
 

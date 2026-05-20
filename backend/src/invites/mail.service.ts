@@ -17,7 +17,7 @@ export class MailService {
 
   async sendInvite(to: string, token: string, role: InviteRole): Promise<void> {
     const baseUrl = process.env.APP_URL ?? 'http://localhost:5173';
-    const link = `${baseUrl}/invites/activate?token=${token}`;
+    const link = `${baseUrl}/activate?token=${token}`;
     const subject =
       role === InviteRole.OWNER
         ? 'Você foi convidado para criar sua organização no Intellux'

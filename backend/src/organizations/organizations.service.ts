@@ -5,6 +5,13 @@ import type { JwtPayload } from '../auth/auth.service';
 import { Organization } from '../database/entities/organization.entity';
 import { User, UserRole } from '../database/entities/user.entity';
 
+export type OrgPage = {
+  items: Organization[];
+  total: number;
+  page: number;
+  totalPages: number;
+};
+
 @Injectable()
 export class OrganizationsService {
   constructor(
@@ -12,11 +19,17 @@ export class OrganizationsService {
     @InjectRepository(User) private readonly userRepo: Repository<User>,
   ) {}
 
-  findAll(caller: JwtPayload): Promise<Organization[]> {
+  async findAll(caller: JwtPayload, page = 1, limit = 10): Promise<OrgPage> {
     if (caller.role === UserRole.SUPER_ADMIN) {
-      return this.orgRepo.find({ order: { createdAt: 'DESC' } });
+      const [items, total] = await this.orgRepo.findAndCount({
+        order: { createdAt: 'DESC' },
+        skip: (page - 1) * limit,
+        take: limit,
+      });
+      return { items, total, page, totalPages: Math.ceil(total / limit) };
     }
-    return this.orgRepo.find({ where: { id: caller.organizationId! } });
+    const items = await this.orgRepo.find({ where: { id: caller.organizationId! } });
+    return { items, total: items.length, page: 1, totalPages: 1 };
   }
 
   async findMembers(orgId: string, caller: JwtPayload): Promise<Partial<User>[]> {
