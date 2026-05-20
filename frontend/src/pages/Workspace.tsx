@@ -1,16 +1,13 @@
 import { useState } from 'react';
 import { AppShell } from '../components/layout/AppShell';
 import { ImageGrid } from '../features/workspace/ImageGrid';
-import { ShareModal } from '../features/workspace/ShareModal';
 import { UploadModal } from '../features/workspace/UploadModal';
 import { WorkspaceList } from '../features/workspace/WorkspaceList';
-import type { FileItem } from '../types';
 import s from './Workspace.module.scss';
 
 export function WorkspacePage() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [uploadOpen, setUploadOpen] = useState(false);
-  const [shareTarget, setShareTarget] = useState<FileItem | null>(null);
 
   function handleUploadSuccess() {
     setUploadOpen(false);
@@ -31,20 +28,16 @@ export function WorkspacePage() {
 
       <section className={s.section}>
         <h2 className={s.sectionTitle}>Arquivos de texto</h2>
-        <WorkspaceList refreshKey={refreshKey} onShare={setShareTarget} />
+        <WorkspaceList refreshKey={refreshKey} />
       </section>
 
       <section className={s.section}>
         <h2 className={s.sectionTitle}>Imagens</h2>
-        <ImageGrid refreshKey={refreshKey} onShare={setShareTarget} />
+        <ImageGrid refreshKey={refreshKey} />
       </section>
 
       {uploadOpen && (
         <UploadModal onClose={() => setUploadOpen(false)} onSuccess={handleUploadSuccess} />
-      )}
-
-      {shareTarget && (
-        <ShareModal file={shareTarget} onClose={() => setShareTarget(null)} />
       )}
     </AppShell>
   );

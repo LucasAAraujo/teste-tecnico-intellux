@@ -1,7 +1,5 @@
 import { useState } from 'react';
 import { useFiles } from '../../hooks/useFiles';
-import type { FileItem } from '../../types';
-import { UserRole } from '../../types';
 import s from './WorkspaceList.module.scss';
 
 const API_BASE = (import.meta.env.VITE_API_URL as string | undefined ?? 'http://localhost:3000/api').replace(/\/api$/, '');
@@ -47,14 +45,6 @@ function FileIcon() {
   );
 }
 
-function ShareIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
-      <path strokeLinecap="round" strokeLinejoin="round"
-        d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
-    </svg>
-  );
-}
 
 function DownloadIcon() {
   return (
@@ -66,16 +56,13 @@ function DownloadIcon() {
 
 type Props = {
   refreshKey?: number;
-  onShare: (file: FileItem) => void;
 };
 
-export function WorkspaceList({ refreshKey = 0, onShare }: Props) {
+export function WorkspaceList({ refreshKey = 0 }: Props) {
   const {
     state,
     members,
     isOwner,
-    currentUserId,
-    currentUserRole,
     search: appliedSearch,
     from: appliedFrom,
     to: appliedTo,
@@ -108,11 +95,6 @@ export function WorkspaceList({ refreshKey = 0, onShare }: Props) {
     setDraftTo('');
     setDraftUserId('');
     clearFilters();
-  }
-
-  function canShare(file: FileItem): boolean {
-    if (currentUserRole === UserRole.OWNER) return true;
-    return file.createdBy === currentUserId;
   }
 
   return (
@@ -197,51 +179,31 @@ export function WorkspaceList({ refreshKey = 0, onShare }: Props) {
 
       {state.status === 'ready' && state.files.length > 0 && (
         <ul className={s.list}>
-          {state.files.map((file) => {
-            const isShared = file.createdBy !== currentUserId;
-            return (
-              <li key={file.id} className={s.row}>
-                <FileIcon />
+          {state.files.map((file) => (
+            <li key={file.id} className={s.row}>
+              <FileIcon />
 
-                <div className={s.info}>
-                  <span className={s.fileName}>{file.name}</span>
-                  <span className={s.meta}>
-                    {file.uploader?.name ?? '—'}
-                    <span className={s.dot}>·</span>
-                    {formatDate(file.uploadedAt)}
-                    <span className={s.dot}>·</span>
-                    {formatSize(file.sizeBytes)}
-                  </span>
-                </div>
+              <div className={s.info}>
+                <span className={s.fileName}>{file.name}</span>
+                <span className={s.meta}>
+                  {file.uploader?.name ?? '—'}
+                  <span className={s.dot}>·</span>
+                  {formatDate(file.uploadedAt)}
+                  <span className={s.dot}>·</span>
+                  {formatSize(file.sizeBytes)}
+                </span>
+              </div>
 
-                {isShared && file.uploader && (
-                  <span className={s.sharedBadge}>
-                    Compartilhado por {file.uploader.name}
-                  </span>
-                )}
-
-                <button
-                  className={s.actionIconBtn}
-                  onClick={() => void downloadFile(file.storagePath, file.name)}
-                  title="Baixar"
-                  aria-label="Baixar arquivo"
-                >
-                  <DownloadIcon />
-                </button>
-
-                {canShare(file) && (
-                  <button
-                    className={s.actionIconBtn}
-                    onClick={() => onShare(file)}
-                    title="Compartilhar"
-                    aria-label="Compartilhar arquivo"
-                  >
-                    <ShareIcon />
-                  </button>
-                )}
-              </li>
-            );
-          })}
+              <button
+                className={s.actionIconBtn}
+                onClick={() => void downloadFile(file.storagePath, file.name)}
+                title="Baixar"
+                aria-label="Baixar arquivo"
+              >
+                <DownloadIcon />
+              </button>
+            </li>
+          ))}
         </ul>
       )}
     </div>

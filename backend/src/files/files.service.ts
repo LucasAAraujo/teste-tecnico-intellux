@@ -46,12 +46,7 @@ export class FilesService {
     } else if (caller.role === UserRole.OWNER) {
       qb.where('file.organizationId = :orgId', { orgId: caller.organizationId });
     } else {
-      qb.where('file.organizationId = :orgId', { orgId: caller.organizationId })
-        .andWhere(
-          '(file.createdBy = :uid OR EXISTS ' +
-            '(SELECT 1 FROM file_shares fs WHERE fs.file_id = file.id AND fs.recipient_id = :uid))',
-          { uid: caller.sub },
-        );
+      qb.where('file.organizationId = :orgId', { orgId: caller.organizationId });
     }
 
     if (query.type) qb.andWhere('file.type = :type', { type: query.type });
