@@ -26,8 +26,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (response) => response,
   (error: unknown) => {
-    const status = (error as { response?: { status?: number } }).response?.status;
-    if (status === 401) {
+    const err = error as { response?: { status?: number }; config?: { url?: string } };
+    const status = err.response?.status;
+    const isLoginRequest = err.config?.url?.includes('/auth/login');
+    if (status === 401 && !isLoginRequest) {
       sessionStorage.removeItem('auth');
       window.location.replace('/login');
     } else if (status === 403) {

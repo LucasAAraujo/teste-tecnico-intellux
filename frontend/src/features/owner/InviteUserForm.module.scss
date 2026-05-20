@@ -2,24 +2,25 @@
 @use '../../styles/mixins' as *;
 
 .card {
-  background: $accent;
+  background: $secondary;
   border-radius: $radius-md;
   border: none;
-  box-shadow: 0 2px 8px rgba(214, 251, 73, 0.25);
-  padding: 24px;
+  border-left: 3px solid $accent;
+  box-shadow: 0 2px 8px rgba(11, 47, 58, 0.2);
+  padding: 24px 24px 24px 22px;
 }
 
 .title {
   margin: 0 0 4px;
   font-size: 14px;
   font-weight: 700;
-  color: $secondary;
+  color: #fff;
 }
 
 .description {
   margin: 0 0 20px;
   font-size: 12px;
-  color: rgba(11, 47, 58, 0.6);
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .row {
@@ -34,33 +35,40 @@
 
 .input {
   @include form-input;
-  border-color: rgba(11, 47, 58, 0.2);
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: #fff;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+  }
 
   &:focus {
-    border-color: $secondary;
-    box-shadow: 0 0 0 3px rgba(11, 47, 58, 0.15);
+    border-color: $accent;
+    box-shadow: 0 0 0 3px rgba(214, 251, 73, 0.2);
   }
 }
 
 .error {
   @include field-error;
+  color: #fca5a5;
 }
 
 .submitBtn {
   flex-shrink: 0;
   padding: 10px 16px;
-  background: $secondary;
-  color: $accent;
+  background: $accent;
+  color: $secondary;
   border: none;
   border-radius: $radius-sm;
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
-  transition: opacity $transition;
+  transition: background $transition, opacity $transition;
 
   &:hover:not(:disabled) {
-    opacity: 0.85;
+    background: $accent-hover;
   }
 
   &:disabled {
