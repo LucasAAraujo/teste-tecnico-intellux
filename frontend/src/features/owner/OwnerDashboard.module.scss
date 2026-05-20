@@ -1,4 +1,5 @@
 @use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
 
 .section {
   & + & {
@@ -35,6 +36,65 @@
 .errorText {
   font-size: 14px;
   color: #ef4444;
+}
+
+// ── Members table ────────────────────────────────────────
+.tableWrap {
+  @include card;
+  overflow: hidden;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.th {
+  padding: 10px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: $gray-500;
+  text-align: left;
+  border-bottom: 1px solid $gray-200;
+  background: $gray-50;
+}
+
+.tr {
+  &:not(:last-child) {
+    border-bottom: 1px solid $gray-100;
+  }
+
+  &:hover {
+    background: $gray-50;
+  }
+}
+
+.td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: $gray-900;
+}
+
+.tdMuted {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: $gray-500;
+}
+
+.skeletonRow {
+  height: 46px;
+  background: $gray-100;
+  border-radius: $radius-sm;
+  margin-bottom: 6px;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.emptyText {
+  font-size: 14px;
+  color: $gray-500;
+  padding: 24px 0;
 }
 
 @keyframes pulse {

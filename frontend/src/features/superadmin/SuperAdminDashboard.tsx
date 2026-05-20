@@ -48,7 +48,7 @@ function OrgsList({ refreshKey }: { refreshKey: number }) {
     return <p className={s.errorText}>{state.message}</p>;
   }
 
-  const { items, total, totalPages } = state.page;
+  const { items = [], total = 0, totalPages = 0 } = state.page ?? {};
 
   if (items.length === 0) {
     return <p className={s.emptyText}>Nenhuma organização cadastrada.</p>;
@@ -164,13 +164,13 @@ export function SuperAdminDashboard() {
       </section>
 
       <section className={s.section}>
-        <h2 className={s.sectionTitle}>Organizações</h2>
-        <OrgsList refreshKey={refreshKey} />
+        <h2 className={s.sectionTitle}>Novo convite</h2>
+        <InviteOwnerForm onSuccess={() => setRefreshKey((k) => k + 1)} />
       </section>
 
       <section className={s.section}>
-        <h2 className={s.sectionTitle}>Novo convite</h2>
-        <InviteOwnerForm onSuccess={() => setRefreshKey((k) => k + 1)} />
+        <h2 className={s.sectionTitle}>Organizações</h2>
+        <OrgsList refreshKey={refreshKey} />
       </section>
     </div>
   );
