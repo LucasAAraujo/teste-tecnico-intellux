@@ -58,7 +58,9 @@ export class FilesService {
     if (query.search) qb.andWhere('file.name LIKE :search', { search: `%${query.search}%` });
     if (query.from) qb.andWhere('file.uploadedAt >= :from', { from: new Date(query.from) });
     if (query.to) qb.andWhere('file.uploadedAt <= :to', { to: new Date(query.to) });
-    if (query.userId) qb.andWhere('file.createdBy = :userId', { userId: query.userId });
+    if (query.userId && caller.role === UserRole.OWNER) {
+      qb.andWhere('file.createdBy = :userId', { userId: query.userId });
+    }
 
     return qb.orderBy('file.uploadedAt', 'DESC').getMany();
   }
