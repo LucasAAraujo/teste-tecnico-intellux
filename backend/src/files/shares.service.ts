@@ -21,6 +21,16 @@ export class SharesService {
     @InjectRepository(User) private readonly userRepo: Repository<User>,
   ) {}
 
+  async getShares(fileId: string, caller: JwtPayload): Promise<{ recipientId: string }[]> {
+    const file = await this.fileRepo.findOne({ where: { id: fileId } });
+    if (!file) throw new NotFoundException('Arquivo não encontrado');
+    if (caller.role !== UserRole.SUPER_ADMIN && file.organizationId !== caller.organizationId) {
+      throw new ForbiddenException();
+    }
+    const shares = await this.shareRepo.find({ where: { fileId } });
+    return shares.map((s) => ({ recipientId: s.recipientId }));
+  }
+
   async share(fileId: string, dto: ShareFileDto, caller: JwtPayload): Promise<void> {
     const file = await this.fileRepo.findOne({ where: { id: fileId } });
     if (!file) throw new NotFoundException('Arquivo não encontrado');

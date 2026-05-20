@@ -82,6 +82,12 @@ export class FilesController {
     return this.filesService.remove(id, user);
   }
 
+  @Get(':id/shares')
+  @Roles(UserRole.OWNER, UserRole.USER)
+  getShares(@Param('id') id: string, @CurrentUser() user: JwtPayload) {
+    return this.sharesService.getShares(id, user);
+  }
+
   @Post(':id/share')
   @Roles(UserRole.OWNER, UserRole.USER)
   @HttpCode(HttpStatus.CREATED)

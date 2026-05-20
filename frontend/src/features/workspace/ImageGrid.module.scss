@@ -59,6 +59,49 @@
   animation: pulse 1.4s ease-in-out infinite;
 }
 
+// ── Hover overlay ────────────────────────────────────────
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 8px;
+  opacity: 0;
+  transition: opacity 200ms ease;
+
+  .cell:hover & {
+    opacity: 1;
+  }
+}
+
+.previewBtn,
+.shareBtn {
+  width: 30px;
+  height: 30px;
+  border-radius: $radius-sm;
+  border: none;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(4px);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background $transition;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.32);
+  }
+}
+
 // ── Modal backdrop ────────────────────────────────────────
 .backdrop {
   position: fixed;

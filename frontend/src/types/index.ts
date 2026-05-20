@@ -57,6 +57,7 @@ export type FileItem = {
   name: string;
   type: FileType;
   mimeType: string;
+  storagePath: string;
   sizeBytes: number;
   uploadedAt: string;
   uploader?: FileUploader;

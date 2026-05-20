@@ -55,6 +55,7 @@ export function useFiles(refreshKey = 0) {
     members,
     isOwner,
     currentUserId: user?.sub ?? '',
+    currentUserRole: user?.role,
     search,
     setSearch,
     from,

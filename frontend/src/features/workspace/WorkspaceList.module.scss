@@ -139,6 +139,32 @@
   color: $gray-300;
 }
 
+.shareIconBtn {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+  border-radius: $radius-sm;
+  border: 1px solid $gray-200;
+  background: #fff;
+  color: $gray-500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color $transition, border-color $transition, background $transition;
+
+  svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  &:hover {
+    color: $accent;
+    border-color: $accent;
+    background: rgba(124, 58, 237, 0.04);
+  }
+}
+
 .sharedBadge {
   flex-shrink: 0;
   font-size: 11px;

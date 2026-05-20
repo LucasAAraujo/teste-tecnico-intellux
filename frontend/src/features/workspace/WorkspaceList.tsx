@@ -1,4 +1,6 @@
 import { useFiles } from '../../hooks/useFiles';
+import type { FileItem } from '../../types';
+import { UserRole } from '../../types';
 import s from './WorkspaceList.module.scss';
 
 function formatDate(iso: string): string {
@@ -25,12 +27,27 @@ function FileIcon() {
   );
 }
 
-export function WorkspaceList() {
+function ShareIcon() {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8}>
+      <path strokeLinecap="round" strokeLinejoin="round"
+        d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+    </svg>
+  );
+}
+
+type Props = {
+  refreshKey?: number;
+  onShare: (file: FileItem) => void;
+};
+
+export function WorkspaceList({ refreshKey = 0, onShare }: Props) {
   const {
     state,
     members,
     isOwner,
     currentUserId,
+    currentUserRole,
     search,
     setSearch,
     from,
@@ -39,7 +56,12 @@ export function WorkspaceList() {
     setTo,
     userId,
     setUserId,
-  } = useFiles();
+  } = useFiles(refreshKey);
+
+  function canShare(file: FileItem): boolean {
+    if (currentUserRole === UserRole.OWNER) return true;
+    return file.createdBy === currentUserId;
+  }
 
   return (
     <div className={s.container}>
@@ -134,6 +156,17 @@ export function WorkspaceList() {
                   <span className={s.sharedBadge}>
                     Compartilhado por {file.uploader.name}
                   </span>
+                )}
+
+                {canShare(file) && (
+                  <button
+                    className={s.shareIconBtn}
+                    onClick={() => onShare(file)}
+                    title="Compartilhar"
+                    aria-label="Compartilhar arquivo"
+                  >
+                    <ShareIcon />
+                  </button>
                 )}
               </li>
             );

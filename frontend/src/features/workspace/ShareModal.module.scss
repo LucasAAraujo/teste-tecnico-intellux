@@ -1,0 +1,198 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeIn 150ms ease;
+}
+
+.modal {
+  @include card;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  animation: scaleIn 150ms ease;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+// ── Header ───────────────────────────────────────────────
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0 0 2px;
+  font-size: 16px;
+  font-weight: 600;
+  color: $gray-900;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: $gray-500;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.closeBtn {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: none;
+  background: $gray-100;
+  color: $gray-500;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background $transition;
+
+  &:hover {
+    background: $gray-200;
+  }
+}
+
+// ── Member list ───────────────────────────────────────────
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow-y: auto;
+}
+
+.memberRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: $radius-sm;
+  transition: background $transition;
+
+  &:hover {
+    background: $gray-50;
+  }
+}
+
+.avatar {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: $accent;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.memberInfo {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.memberName {
+  font-size: 14px;
+  font-weight: 500;
+  color: $gray-900;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.memberEmail {
+  font-size: 12px;
+  color: $gray-500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.action {
+  flex-shrink: 0;
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 500;
+  color: $gray-500;
+  background: $gray-100;
+  border-radius: 100px;
+  padding: 3px 10px;
+  white-space: nowrap;
+}
+
+.badgeShared {
+  color: $accent;
+  background: rgba(124, 58, 237, 0.08);
+}
+
+.shareBtn {
+  @include btn-primary;
+  padding: 6px 14px;
+  font-size: 12px;
+}
+
+// ── States ───────────────────────────────────────────────
+.skeletonRow {
+  height: 56px;
+  background: $gray-100;
+  border-radius: $radius-sm;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+.errorText,
+.emptyText {
+  font-size: 14px;
+  color: $gray-500;
+  text-align: center;
+  padding: 24px 0;
+  margin: 0;
+}
+
+.errorText {
+  color: #ef4444;
+}
+
+// ── Animations ───────────────────────────────────────────
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.96); opacity: 0; }
+  to   { transform: scale(1);    opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.45; }
+}

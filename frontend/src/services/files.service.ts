@@ -12,4 +12,25 @@ export const filesService = {
     const res = await api.get<FileItem[]>('/files', { params });
     return res.data;
   },
+
+  async upload(file: File, onProgress?: (pct: number) => void): Promise<FileItem> {
+    const form = new FormData();
+    form.append('file', file);
+    const res = await api.post<FileItem>('/files/upload', form, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+      onUploadProgress: (evt) => {
+        if (onProgress && evt.total) onProgress(Math.round((evt.loaded * 100) / evt.total));
+      },
+    });
+    return res.data;
+  },
+
+  async getShares(fileId: string): Promise<{ recipientId: string }[]> {
+    const res = await api.get<{ recipientId: string }[]>(`/files/${fileId}/shares`);
+    return res.data;
+  },
+
+  async share(fileId: string, recipientIds: string[]): Promise<void> {
+    await api.post(`/files/${fileId}/share`, { recipientIds });
+  },
 };

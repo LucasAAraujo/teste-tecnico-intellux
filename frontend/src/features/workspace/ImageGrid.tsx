@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
+import { useAuthStore } from '../../store/auth.store';
 import { useImageFiles } from '../../hooks/useImageFiles';
 import type { FileItem } from '../../types';
+import { UserRole } from '../../types';
 import s from './ImageGrid.module.scss';
 
 const API_BASE = (import.meta.env.VITE_API_URL as string | undefined ?? 'http://localhost:3000/api').replace(/\/api$/, '');
@@ -18,12 +20,13 @@ function formatDate(iso: string): string {
 
 // ── Lazy image ────────────────────────────────────────────
 type LazyImageProps = {
-  src: string;
-  alt: string;
+  file: FileItem;
+  canShare: boolean;
   onClick: () => void;
+  onShare: () => void;
 };
 
-function LazyImage({ src, alt, onClick }: LazyImageProps) {
+function LazyImage({ file, canShare, onClick, onShare }: LazyImageProps) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -45,19 +48,37 @@ function LazyImage({ src, alt, onClick }: LazyImageProps) {
   }, []);
 
   return (
-    <div ref={wrapRef} className={s.cell} onClick={onClick} role="button" tabIndex={0}
-      onKeyDown={(e) => e.key === 'Enter' && onClick()}>
+    <div ref={wrapRef} className={s.cell}>
       {visible ? (
         <img
-          src={src}
-          alt={alt}
+          src={imageUrl(file.storagePath)}
+          alt={file.name}
           className={`${s.img} ${loaded ? s.imgLoaded : ''}`}
           onLoad={() => setLoaded(true)}
+          onClick={onClick}
         />
       ) : (
         <div className={s.placeholder} />
       )}
       {!loaded && visible && <div className={s.placeholder} />}
+
+      <div className={s.overlay}>
+        <button className={s.previewBtn} onClick={onClick} aria-label="Visualizar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round"
+              d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178Z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+          </svg>
+        </button>
+        {canShare && (
+          <button className={s.shareBtn} onClick={onShare} aria-label="Compartilhar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round"
+                d="M7.217 10.907a2.25 2.25 0 1 0 0 2.186m0-2.186c.18.324.283.696.283 1.093s-.103.77-.283 1.093m0-2.186 9.566-5.314m-9.566 7.5 9.566 5.314m0 0a2.25 2.25 0 1 0 3.935 2.186 2.25 2.25 0 0 0-3.935-2.186Zm0-12.814a2.25 2.25 0 1 0 3.933-2.185 2.25 2.25 0 0 0-3.933 2.185Z" />
+            </svg>
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -92,9 +113,20 @@ function PreviewModal({ file, onClose }: PreviewModalProps) {
 }
 
 // ── ImageGrid ────────────────────────────────────────────
-export function ImageGrid() {
-  const state = useImageFiles();
+type Props = {
+  refreshKey?: number;
+  onShare: (file: FileItem) => void;
+};
+
+export function ImageGrid({ refreshKey = 0, onShare }: Props) {
+  const { user } = useAuthStore();
+  const state = useImageFiles(refreshKey);
   const [preview, setPreview] = useState<FileItem | null>(null);
+
+  function canShare(file: FileItem): boolean {
+    if (user?.role === UserRole.OWNER) return true;
+    return file.createdBy === (user?.sub ?? '');
+  }
 
   if (state.status === 'loading') {
     return (
@@ -128,9 +160,10 @@ export function ImageGrid() {
         {state.files.map((file) => (
           <LazyImage
             key={file.id}
-            src={imageUrl(file.storagePath)}
-            alt={file.name}
+            file={file}
+            canShare={canShare(file)}
             onClick={() => setPreview(file)}
+            onShare={() => onShare(file)}
           />
         ))}
       </div>

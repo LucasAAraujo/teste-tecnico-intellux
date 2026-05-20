@@ -1,4 +1,23 @@
 @use '../styles/variables' as *;
+@use '../styles/mixins' as *;
+
+.pageHeader {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 28px;
+}
+
+.uploadBtn {
+  @include btn-primary;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
 
 .section {
   & + & {
