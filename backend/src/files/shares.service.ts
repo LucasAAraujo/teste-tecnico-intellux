@@ -24,7 +24,7 @@ export class SharesService {
   async getShares(fileId: string, caller: JwtPayload): Promise<{ recipientId: string }[]> {
     const file = await this.fileRepo.findOne({ where: { id: fileId } });
     if (!file) throw new NotFoundException('Arquivo não encontrado');
-    if (caller.role !== UserRole.SUPER_ADMIN && file.organizationId !== caller.organizationId) {
+    if (file.organizationId !== caller.organizationId) {
       throw new ForbiddenException();
     }
     const shares = await this.shareRepo.find({ where: { fileId } });
@@ -35,7 +35,7 @@ export class SharesService {
     const file = await this.fileRepo.findOne({ where: { id: fileId } });
     if (!file) throw new NotFoundException('Arquivo não encontrado');
 
-    if (caller.role !== UserRole.SUPER_ADMIN && file.organizationId !== caller.organizationId) {
+    if (file.organizationId !== caller.organizationId) {
       throw new ForbiddenException();
     }
 

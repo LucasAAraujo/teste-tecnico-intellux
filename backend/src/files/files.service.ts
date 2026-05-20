@@ -42,7 +42,7 @@ export class FilesService {
       .addSelect(['uploader.id', 'uploader.name']);
 
     if (caller.role === UserRole.SUPER_ADMIN) {
-      // sem filtro de org — acesso irrestrito
+      throw new ForbiddenException('SUPER_ADMIN não pode acessar arquivos de organizações');
     } else if (caller.role === UserRole.OWNER) {
       qb.where('file.organizationId = :orgId', { orgId: caller.organizationId });
     } else {
@@ -68,7 +68,7 @@ export class FilesService {
   async findOne(id: string, caller: JwtPayload): Promise<FileEntity> {
     const file = await this.fileRepo.findOne({ where: { id } });
     if (!file) throw new NotFoundException('Arquivo não encontrado');
-    if (caller.role !== UserRole.SUPER_ADMIN && file.organizationId !== caller.organizationId) {
+    if (file.organizationId !== caller.organizationId) {
       throw new ForbiddenException();
     }
     return file;
@@ -89,9 +89,7 @@ export class FilesService {
   async remove(id: string, caller: JwtPayload): Promise<void> {
     const file = await this.findOne(id, caller);
     const canDelete =
-      caller.role === UserRole.SUPER_ADMIN ||
-      (caller.role === UserRole.OWNER && file.organizationId === caller.organizationId) ||
-      file.createdBy === caller.sub;
+      caller.role === UserRole.OWNER && file.organizationId === caller.organizationId;
     if (!canDelete) throw new ForbiddenException('Sem permissão para excluir este arquivo');
 
     await this.fileRepo.remove(file);
