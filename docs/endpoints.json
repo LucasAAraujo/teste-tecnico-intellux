@@ -1,0 +1,256 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-01-01T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app",
+  "resources": [
+    {
+      "_id": "wrk_intellux",
+      "_type": "workspace",
+      "name": "Intellux Drive",
+      "description": "API do Intellux Drive — NestJS + MySQL"
+    },
+    {
+      "_id": "env_base",
+      "_type": "environment",
+      "parentId": "wrk_intellux",
+      "name": "Base",
+      "data": {
+        "base_url": "http://localhost:3000/api",
+        "token": ""
+      }
+    },
+    {
+      "_id": "fld_auth",
+      "_type": "request_group",
+      "parentId": "wrk_intellux",
+      "name": "Auth"
+    },
+    {
+      "_id": "req_login",
+      "_type": "request",
+      "parentId": "fld_auth",
+      "name": "Login",
+      "method": "POST",
+      "url": "{{ _.base_url }}/auth/login",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@intellux.com\",\n  \"password\": \"changeme\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ]
+    },
+    {
+      "_id": "fld_users",
+      "_type": "request_group",
+      "parentId": "wrk_intellux",
+      "name": "Users"
+    },
+    {
+      "_id": "req_me",
+      "_type": "request",
+      "parentId": "fld_users",
+      "name": "Meu perfil",
+      "method": "GET",
+      "url": "{{ _.base_url }}/users/me",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "fld_invites",
+      "_type": "request_group",
+      "parentId": "wrk_intellux",
+      "name": "Invites"
+    },
+    {
+      "_id": "req_invites_list",
+      "_type": "request",
+      "parentId": "fld_invites",
+      "name": "Listar convites",
+      "method": "GET",
+      "url": "{{ _.base_url }}/invites",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_invites_create",
+      "_type": "request",
+      "parentId": "fld_invites",
+      "name": "Criar convite",
+      "method": "POST",
+      "url": "{{ _.base_url }}/invites",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"novo@empresa.com\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_invites_validate",
+      "_type": "request",
+      "parentId": "fld_invites",
+      "name": "Validar token",
+      "method": "GET",
+      "url": "{{ _.base_url }}/invites/validate/TOKEN_AQUI",
+      "headers": []
+    },
+    {
+      "_id": "req_invites_activate_user",
+      "_type": "request",
+      "parentId": "fld_invites",
+      "name": "Ativar conta (USER)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/invites/activate",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"token\": \"TOKEN_AQUI\",\n  \"name\": \"João Silva\",\n  \"password\": \"senha123\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ]
+    },
+    {
+      "_id": "req_invites_activate_owner",
+      "_type": "request",
+      "parentId": "fld_invites",
+      "name": "Ativar conta (OWNER)",
+      "method": "POST",
+      "url": "{{ _.base_url }}/invites/activate",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"token\": \"TOKEN_AQUI\",\n  \"name\": \"Maria Souza\",\n  \"password\": \"senha123\",\n  \"orgName\": \"Empresa XPTO\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" }
+      ]
+    },
+    {
+      "_id": "fld_orgs",
+      "_type": "request_group",
+      "parentId": "wrk_intellux",
+      "name": "Organizations"
+    },
+    {
+      "_id": "req_orgs_list",
+      "_type": "request",
+      "parentId": "fld_orgs",
+      "name": "Listar organizações",
+      "method": "GET",
+      "url": "{{ _.base_url }}/organizations?page=1&limit=10",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_orgs_members",
+      "_type": "request",
+      "parentId": "fld_orgs",
+      "name": "Listar membros da org",
+      "method": "GET",
+      "url": "{{ _.base_url }}/organizations/ORG_ID_AQUI/members",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "fld_files",
+      "_type": "request_group",
+      "parentId": "wrk_intellux",
+      "name": "Files"
+    },
+    {
+      "_id": "req_files_upload",
+      "_type": "request",
+      "parentId": "fld_files",
+      "name": "Upload de arquivo",
+      "method": "POST",
+      "url": "{{ _.base_url }}/files/upload",
+      "body": {
+        "mimeType": "multipart/form-data",
+        "params": [
+          { "name": "file", "value": "", "type": "file", "fileName": "" }
+        ]
+      },
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_files_list",
+      "_type": "request",
+      "parentId": "fld_files",
+      "name": "Listar arquivos",
+      "method": "GET",
+      "url": "{{ _.base_url }}/files?type=TEXT",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_files_list_images",
+      "_type": "request",
+      "parentId": "fld_files",
+      "name": "Listar imagens",
+      "method": "GET",
+      "url": "{{ _.base_url }}/files?type=IMAGE",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_files_list_filtered",
+      "_type": "request",
+      "parentId": "fld_files",
+      "name": "Listar arquivos (com filtros)",
+      "method": "GET",
+      "url": "{{ _.base_url }}/files?type=TEXT&search=relatorio&from=2025-01-01&to=2025-12-31",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_files_get",
+      "_type": "request",
+      "parentId": "fld_files",
+      "name": "Detalhes do arquivo",
+      "method": "GET",
+      "url": "{{ _.base_url }}/files/FILE_ID_AQUI",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_files_rename",
+      "_type": "request",
+      "parentId": "fld_files",
+      "name": "Renomear arquivo",
+      "method": "PATCH",
+      "url": "{{ _.base_url }}/files/FILE_ID_AQUI",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"name\": \"novo-nome.pdf\"\n}"
+      },
+      "headers": [
+        { "name": "Content-Type", "value": "application/json" },
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    },
+    {
+      "_id": "req_files_delete",
+      "_type": "request",
+      "parentId": "fld_files",
+      "name": "Deletar arquivo",
+      "method": "DELETE",
+      "url": "{{ _.base_url }}/files/FILE_ID_AQUI",
+      "headers": [
+        { "name": "Authorization", "value": "Bearer {{ _.token }}" }
+      ]
+    }
+  ]
+}
