@@ -1,4 +1,79 @@
 @use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+// ── Filters ──────────────────────────────────────────────
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.searchWrapper {
+  position: relative;
+  flex: 1;
+  min-width: 200px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: $gray-400;
+  pointer-events: none;
+}
+
+.searchInput {
+  @include form-input;
+  padding-left: 34px;
+
+  &::-webkit-search-cancel-button {
+    cursor: pointer;
+  }
+}
+
+.dateRange {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.dateInput {
+  @include form-input;
+  width: 148px;
+  padding: 9px 10px;
+  font-size: 13px;
+  color: $gray-700;
+
+  &::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+  }
+}
+
+.dateSeparator {
+  font-size: 13px;
+  color: $gray-400;
+  flex-shrink: 0;
+}
+
+.userSelect {
+  @include form-input;
+  width: auto;
+  min-width: 170px;
+  padding: 9px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 28px;
+  appearance: none;
+}
 
 // ── Grid ────────────────────────────────────────────────
 .grid {
@@ -57,6 +132,25 @@
 
 .skeleton {
   animation: pulse 1.4s ease-in-out infinite;
+}
+
+// ── Shared badge ─────────────────────────────────────────
+.sharedBadge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  color: #fff;
+  background: rgba(124, 58, 237, 0.82);
+  backdrop-filter: blur(4px);
+  border-radius: 100px;
+  padding: 2px 8px;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: calc(100% - 12px);
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 // ── Hover overlay ────────────────────────────────────────
