@@ -4,6 +4,16 @@ Plataforma de gestão e compartilhamento de arquivos multi-tenant. Cada organiza
 
 ---
 
+## Deploy
+
+| Camada | Plataforma | URL |
+|---|---|---|
+| **Frontend** | Vercel | https://teste-tecnico-intellux.vercel.app |
+| **Backend** | AWS EC2 | https://intellux.devlucasalves.com/api |
+| **Banco de dados** | Hostinger (MySQL dedicado) | — |
+
+---
+
 ## Stack
 
 | Camada | Tecnologia |
@@ -141,13 +151,19 @@ cd frontend
 npm install
 ```
 
-### 3.2 Configurar variável de ambiente (opcional)
+### 3.2 Configurar variável de ambiente
 
-Por padrão o frontend aponta para `http://localhost:3000/api`. Para alterar, crie `.env`:
+Crie `.env` na pasta `frontend/`:
 
 ```env
+# desenvolvimento local
 VITE_API_URL=http://localhost:3000/api
+
+# produção
+VITE_API_URL=https://intellux.devlucasalves.com/api
 ```
+
+> Na Vercel, configure `VITE_API_URL` em **Settings > Environment Variables** e faça um redeploy — variáveis `VITE_*` são injetadas em build time.
 
 ### 3.3 Iniciar o servidor de desenvolvimento
 
